@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,21 +43,45 @@ export default function SignUpPage() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="Username">Username</Label>
-                <Input id="username" placeholder="Username" type="text" />
+                <Input
+                  id="username"
+                  placeholder="Username"
+                  type="text"
+                  value={user.username}
+                  onChange={(e) =>
+                    setUser({ ...user, username: e.target.value })
+                  }
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="Email">Email</Label>
-                <Input id="email" placeholder="Email" type="email" />
+                <Input
+                  id="email"
+                  placeholder="Email"
+                  type="email"
+                  value={user.email}
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="Password">Password</Label>
-                <Input id="password" placeholder="Password" type="password" />
+                <Input
+                  id="password"
+                  placeholder="Password"
+                  type="password"
+                  value={user.password}
+                  onChange={(e) =>
+                    setUser({ ...user, password: e.target.value })
+                  }
+                />
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button variant="outline">Sign Up</Button>
+          <Button onClick={onSignup} variant="outline">
+            Sign Up
+          </Button>
         </CardFooter>
       </Card>
     </div>
