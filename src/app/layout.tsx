@@ -4,6 +4,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/ui/Navbar";
 
 export const metadata: Metadata = {
   title: "Next Auth",
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Navbar />
         <main>{children}</main>
         <Toaster />
       </body>
