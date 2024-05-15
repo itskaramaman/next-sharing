@@ -21,7 +21,7 @@ export default function LoginPage() {
   const onLogin = async () => {};
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <Card className="w-[350px]">
+      <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>
@@ -62,7 +62,7 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex justify-end">
           <Button onClick={onLogin} variant="outline">
-            Sign Up
+            Login
           </Button>
         </CardFooter>
       </Card>
