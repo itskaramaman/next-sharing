@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-
+import LoadingBall from "@/components/ui/Loading";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Card,
   CardContent,
@@ -13,12 +14,49 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [user, setUser] = useState({ email: "", password: "" });
 
-  const onLogin = async () => {};
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const onLogin = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/users/login", user);
+      if (response.data.status === 200) {
+        toast({ title: "Login Success", description: "Let's Explore" });
+        router.push("/");
+      } else {
+        toast({
+          title: "Invalid Credentials",
+          description: "Please check your email and password",
+        });
+      }
+    } catch (error: any) {
+      console.log("Login failed", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
+  if (loading) {
+    return <LoadingBall />;
+  }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Card className="w-[400px]">
@@ -61,7 +99,7 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button onClick={onLogin} variant="outline">
+          <Button onClick={onLogin} variant="outline" disabled={buttonDisabled}>
             Login
           </Button>
         </CardFooter>

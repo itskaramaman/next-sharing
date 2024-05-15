@@ -12,15 +12,15 @@ export async function POST(request: NextRequest) {
     const { email, password } = reqBody;
 
     // check if user exists
-    const user = await User.findOne(email);
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return NextResponse.json({ error: "User does not exists", staus: 400 });
+      return NextResponse.json({ error: "User does not exists", status: 400 });
     }
 
-    const validPassword = bcryptjs.compare(password, user.password);
+    const validPassword = await bcryptjs.compare(password, user.password);
     if (!validPassword) {
-      return NextResponse.json({ error: "Invalid Password", staus: 400 });
+      return NextResponse.json({ error: "Invalid Password", status: 400 });
     }
 
     // create token data
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       message: "Login Successful",
       success: true,
+      status: 200,
     });
 
     response.cookies.set("token", token, { httpOnly: true });
