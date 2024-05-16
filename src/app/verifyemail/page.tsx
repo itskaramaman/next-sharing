@@ -18,24 +18,22 @@ export default function VerifyEmailPage() {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState(false);
 
-  const verifyUserEmail = async () => {
-    try {
-      await axios.post("/api/users/verify", { token });
-      setVerified(true);
-    } catch (error: any) {
-      console.log(error.response.data);
-      setError(true);
-    }
-  };
-
   useEffect(() => {
     const urlToken = window.location.search.split("=")[1];
-    console.log(urlToken);
     setToken(urlToken);
   }, []);
 
   useEffect(() => {
     if (token && token.length > 0) {
+      const verifyUserEmail = async () => {
+        try {
+          await axios.post("/api/users/verify", { token });
+          setVerified(true);
+        } catch (error: any) {
+          console.log(error.response.data);
+          setError(true);
+        }
+      };
       verifyUserEmail();
     }
   }, [token]);
