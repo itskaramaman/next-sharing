@@ -98,7 +98,12 @@ export default function LoginPage() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-end">
+        <CardFooter className="flex justify-between">
+          <Link href={"/forgotpassword"}>
+            <CardDescription className="cursor-pointer text-blue-400 ">
+              Forgot Password?
+            </CardDescription>
+          </Link>
           <Button onClick={onLogin} variant="outline" disabled={buttonDisabled}>
             Login
           </Button>

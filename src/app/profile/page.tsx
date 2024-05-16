@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import {
   Card,
@@ -14,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoadingBall from "@/components/ui/Loading";
 
 interface User {
   _id: string;
@@ -23,15 +25,20 @@ interface User {
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User>({ _id: "", username: "", email: "" });
+  const [loading, setLoading] = useState(false);
+
   const getUserData = async () => {
     const response = await axios.get("/api/users/me");
     const userData = response.data?.data;
     setUser(userData);
-    console.log(userData);
   };
   useEffect(() => {
+    setLoading(true);
     getUserData();
+    setLoading(false);
   }, []);
+
+  if (loading) return <LoadingBall />;
 
   return (
     <div className="flex justify-center mt-20">

@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 import { useToast } from "./use-toast";
 import { Label } from "@/components/ui/label";
 import { CardTitle } from "./card";
+import { useEffect } from "react";
 
 export default function Navbar() {
   const { toast } = useToast();
   const router = useRouter();
+
   const onLogout = async () => {
     const response = await axios.get("/api/users/logout");
     if (response.data.success) {
@@ -22,12 +24,17 @@ export default function Navbar() {
     }
   };
   return (
-    <main className="p-5 flex justify-between shadow-md">
-      <CardTitle>Next Sharing</CardTitle>
-      <div>
-        <Button variant="secondary" onClick={onLogout}>
+    <main className="p-5 flex justify-between items-center shadow-md">
+      <CardTitle>
+        <Link href={"/"}>Next Sharing</Link>
+      </CardTitle>
+      <div className="flex gap-5 items-center">
+        <Link href={"/profile"}>
+          <Label className="cursor-pointer">Profile</Label>
+        </Link>
+        <Label className="cursor-pointer" onClick={onLogout}>
           Logout
-        </Button>
+        </Label>
       </div>
     </main>
   );
