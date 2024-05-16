@@ -51,6 +51,8 @@ export async function PUT(request: NextRequest) {
     }
 
     user.password = hashedPassword;
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordTokenExpiry = undefined;
     await user.save();
 
     return NextResponse.json({
