@@ -56,7 +56,7 @@ export default function ProfilePage() {
                   id="email"
                   placeholder="Email"
                   type="email"
-                  value={user.email}
+                  value={user?.email}
                   disabled={true}
                 />
               </div>
@@ -65,7 +65,7 @@ export default function ProfilePage() {
                 <Input
                   id="username"
                   type="text"
-                  value={user.username}
+                  value={user?.username}
                   disabled={true}
                 />
               </div>
