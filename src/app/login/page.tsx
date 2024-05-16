@@ -63,7 +63,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>
-            Do not have an account? Try
+            Do not have an account? Try{" "}
             <Link href="/signup" className="text-blue-400">
               Sign Up
             </Link>
