@@ -1,6 +1,6 @@
 "use client";
 
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import { TaskItem } from "@/app/page";
 import { CardDescription } from "./card";
 
@@ -9,7 +9,7 @@ interface DraggableItemProps {
   item: TaskItem;
 }
 
-const DraggableItem = ({ item }) => {
+const DraggableItem: React.FC<DraggableItemProps> = ({ item }) => {
   return (
     <Draggable key={item.id} draggableId={item.id.toString()} index={item.id}>
       {(provided) => (

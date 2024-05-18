@@ -1,6 +1,6 @@
 "use client";
 
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable } from "@hello-pangea/dnd";
 import DraggableItem from "./DraggableItem";
 import { TaskItem } from "@/app/page";
 import { CardTitle, CardDescription, CardContent } from "./card";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import DroppableColumn from "@/components/ui/DroppableColumn";
 
 export interface TaskItem {
