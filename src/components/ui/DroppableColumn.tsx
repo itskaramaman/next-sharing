@@ -26,8 +26,8 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
       <Droppable droppableId={droppableId}>
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            {tasks?.map((task) => (
-              <DraggableItem key={task.id} item={task} />
+            {tasks?.map((task, index) => (
+              <DraggableItem key={task.id} item={task} index={index} />
             ))}
             {provided.placeholder}
           </div>
