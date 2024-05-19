@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "./button";
 import axios from "axios";
+import { TaskDialog } from "./TaskDialog";
 import { useRouter } from "next/navigation";
-
 import { useToast } from "./use-toast";
 import { Label } from "@/components/ui/label";
 import { CardTitle } from "./card";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const { toast } = useToast();
@@ -28,13 +27,16 @@ export default function Navbar() {
       <CardTitle>
         <Link href={"/"}>Next Sharing</Link>
       </CardTitle>
-      <div className="flex gap-5 items-center">
+      <div className="flex gap-2 items-center">
+        <TaskDialog />
         <Link href={"/profile"}>
-          <Label className="cursor-pointer">Profile</Label>
+          <Button variant="outline" className="border-none">
+            Profile
+          </Button>
         </Link>
-        <Label className="cursor-pointer" onClick={onLogout}>
+        <Button variant="outline" className="border-none" onClick={onLogout}>
           Logout
-        </Label>
+        </Button>
       </div>
     </main>
   );

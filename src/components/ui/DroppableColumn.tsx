@@ -19,7 +19,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   tasks,
 }) => {
   return (
-    <div className="w-[350px] bg-slate-50 p-2 min-h-96">
+    <div className="md:min-w-[400px] sm:min-w-[200px] bg-slate-50 p-4 min-h-96">
       <CardTitle>{title}</CardTitle>
       <CardDescription className="my-1">{description}</CardDescription>
       <hr className="mb-2" />
