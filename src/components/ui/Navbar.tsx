@@ -8,12 +8,16 @@ import { useToast } from "./use-toast";
 import { Label } from "@/components/ui/label";
 import { CardTitle } from "./card";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import LoadingBall from "./Loading";
 
 export default function Navbar() {
   const { toast } = useToast();
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onLogout = async () => {
+    setLoading(true);
     const response = await axios.get("/api/users/logout");
     if (response.data.success) {
       router.push("/login");
@@ -21,7 +25,11 @@ export default function Navbar() {
     } else {
       toast({ description: "Something went wrong" });
     }
+    setLoading(false);
   };
+
+  if (loading) return <LoadingBall />;
+
   return (
     <main className="p-5 flex justify-between items-center shadow-md">
       <CardTitle>

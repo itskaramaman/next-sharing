@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,15 +17,35 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "./textarea";
 import { DatePicker } from "./datepicker";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import LoadingBall from "./Loading";
+import { useToast } from "./use-toast";
 
 export function TaskDialog() {
+  const { toast } = useToast();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(new Date());
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const onCreate = () => {
-    console.log(title, description, date);
+  const onCreate = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/tasks/task", {
+        title,
+        description,
+        date,
+      });
+      setTitle("");
+      setDescription("");
+      setDate(new Date());
+      toast({ title: "Task creation successfuly", description: "Keep going!" });
+    } catch (error: any) {
+      toast({ title: "Task creation failed", description: error.message });
+    }
+    setLoading(false);
   };
+
+  if (loading) return <LoadingBall />;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -60,7 +81,7 @@ export function TaskDialog() {
         </div>
 
         <DialogFooter>
-          <Button variant="secondary" onClick={onCreate}>
+          <Button variant="secondary" type="submit" onClick={onCreate}>
             Create
           </Button>
         </DialogFooter>
