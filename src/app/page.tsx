@@ -27,6 +27,7 @@ export default function Home() {
     destinationDroppable: string,
     sourceIndex: number
   ) => {
+    if (sourceDroppable === destinationDroppable) return;
     let movedTask: TaskItem | undefined;
     switch (sourceDroppable) {
       case TaskStatus.todo:

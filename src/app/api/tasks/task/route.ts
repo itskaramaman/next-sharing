@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Task from "@/models/taskModel";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import { TaskStatus } from "@/lib/constants";
-import { Coming_Soon } from "next/font/google";
 
 connectDB();
 
