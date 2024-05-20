@@ -19,7 +19,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   tasks,
 }) => {
   return (
-    <div className="md:min-w-[400px] sm:min-w-[200px] bg-slate-50 p-4 min-h-96">
+    <div className="md:w-[400px] sm:min-w-[200px] bg-slate-50 p-4 min-h-96">
       <CardTitle>{title}</CardTitle>
       <CardDescription className="my-1">{description}</CardDescription>
       <hr className="mb-2" />
@@ -27,7 +27,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {tasks?.map((task, index) => (
-              <DraggableItem key={task.id} item={task} index={index} />
+              <DraggableItem key={task._id} item={task} index={index} />
             ))}
             {provided.placeholder}
           </div>

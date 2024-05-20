@@ -12,7 +12,7 @@ interface DraggableItemProps {
 
 const DraggableItem: React.FC<DraggableItemProps> = ({ item, index }) => {
   return (
-    <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+    <Draggable key={item._id} draggableId={item._id} index={index}>
       {(provided) => (
         <div
           ref={provided.innerRef}
@@ -20,8 +20,10 @@ const DraggableItem: React.FC<DraggableItemProps> = ({ item, index }) => {
           {...provided.dragHandleProps}
         >
           <div className="bg-white mb-2 p-2">
-            <h2 className="font-semibold">Title</h2>
-            <CardDescription>{item.content}</CardDescription>
+            <h2 className="font-semibold">{item.title}</h2>
+            <CardDescription className="line-clamp-2">
+              {item.description}
+            </CardDescription>
           </div>
         </div>
       )}

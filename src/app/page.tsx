@@ -1,37 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import DroppableColumn from "@/components/ui/DroppableColumn";
+import axios from "axios";
+import { request } from "http";
 
 export interface TaskItem {
-  id: number;
-  content: string;
+  _id: string;
+  author: string;
+  dueDate: string;
+  status: string;
+  title: string;
+  description: string;
 }
 
-const todoTasks: TaskItem[] = [
-  { id: 1, content: "Todo 1" },
-  { id: 2, content: "Todo 2" },
-  { id: 3, content: "Todo 3" },
-];
-
-const inProgressTasks: TaskItem[] = [
-  { id: 4, content: "Todo 4" },
-  { id: 5, content: "Todo 5" },
-  { id: 6, content: "Todo 6" },
-];
-
-const completedTasks: TaskItem[] = [
-  { id: 7, content: "Todo 7" },
-  { id: 8, content: "Todo 8" },
-  { id: 9, content: "Todo 9" },
-];
-
 export default function Home() {
-  const [todoTaskItems, setTodoTaskItems] = useState(todoTasks);
-  const [inProgressTaskItems, setInProgressTaskItems] =
-    useState(inProgressTasks);
-  const [completedTaskItems, setCompletedTaskItems] = useState(completedTasks);
+  const [todoTaskItems, setTodoTaskItems] = useState<TaskItem[]>([]);
+  const [inProgressTaskItems, setInProgressTaskItems] = useState<TaskItem[]>(
+    []
+  );
+  const [completedTaskItems, setCompletedTaskItems] = useState<TaskItem[]>([]);
 
   const updateSourceAndDestination = (
     sourceDroppable: string,
@@ -70,7 +59,7 @@ export default function Home() {
 
         break;
       case "completed":
-        setCompletedTaskItems([...completedTasks, movedTask]);
+        setCompletedTaskItems([...completedTaskItems, movedTask]);
         break;
       default:
         console.log("Not a valid droppable destination");
@@ -91,6 +80,21 @@ export default function Home() {
       source.index
     );
   };
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const response = await axios.get("/api/tasks/task");
+      console.log(response.data.data);
+      if (response.data?.success) {
+        const { todos, inprogress, completed } = response.data?.data;
+        console.log(todos);
+        setTodoTaskItems(todos);
+        setInProgressTaskItems(inprogress);
+        setCompletedTaskItems(completed);
+      }
+    };
+    getTasks();
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
