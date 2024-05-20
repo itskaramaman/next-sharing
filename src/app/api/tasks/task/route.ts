@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Task from "@/models/taskModel";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import { TaskStatus } from "@/lib/constants";
+import { Coming_Soon } from "next/font/google";
 
 connectDB();
 
@@ -40,6 +41,23 @@ export async function GET(request: NextRequest) {
     });
     return NextResponse.json({
       data: { todos, inprogress, completed },
+      success: true,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message, status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const reqBody = await request.json();
+    const { taskId, status } = reqBody;
+    const task = await Task.findById(taskId);
+    task.status = status;
+    await task.save();
+
+    return NextResponse.json({
+      data: task,
       success: true,
     });
   } catch (error: any) {

@@ -4,6 +4,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import DraggableItem from "./DraggableItem";
 import { TaskItem } from "@/app/page";
 import { CardTitle, CardDescription, CardContent } from "./card";
+import { TaskStatus } from "@/lib/constants";
 
 interface DroppableColumnProps {
   droppableId: string;

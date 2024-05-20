@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import DroppableColumn from "@/components/ui/DroppableColumn";
 import axios from "axios";
-import { request } from "http";
+import { TaskStatus } from "@/lib/constants";
 
 export interface TaskItem {
   _id: string;
@@ -22,24 +22,24 @@ export default function Home() {
   );
   const [completedTaskItems, setCompletedTaskItems] = useState<TaskItem[]>([]);
 
-  const updateSourceAndDestination = (
+  const updateSourceAndDestination = async (
     sourceDroppable: string,
     destinationDroppable: string,
     sourceIndex: number
   ) => {
     let movedTask: TaskItem | undefined;
     switch (sourceDroppable) {
-      case "todo":
+      case TaskStatus.todo:
         const newTodoTasks = Array.from(todoTaskItems);
         [movedTask] = newTodoTasks.splice(sourceIndex, 1);
         setTodoTaskItems(newTodoTasks);
         break;
-      case "inProgress":
+      case TaskStatus.inprogress:
         const newInProgressTasks = Array.from(inProgressTaskItems);
         [movedTask] = newInProgressTasks.splice(sourceIndex, 1);
         setInProgressTaskItems(newInProgressTasks);
         break;
-      case "completed":
+      case TaskStatus.completed:
         const newCompletedTasks = Array.from(completedTaskItems);
         [movedTask] = newCompletedTasks.splice(sourceIndex, 1);
         setCompletedTaskItems(newCompletedTasks);
@@ -47,19 +47,20 @@ export default function Home() {
       default:
         console.log("Not a valid droppable source");
     }
-
     if (!movedTask) return;
 
     switch (destinationDroppable) {
-      case "todo":
+      case TaskStatus.todo:
         setTodoTaskItems([...todoTaskItems, movedTask]);
+        await updateTaskStatus(movedTask._id, TaskStatus.todo);
         break;
-      case "inProgress":
+      case TaskStatus.inprogress:
         setInProgressTaskItems([...inProgressTaskItems, movedTask]);
-
+        await updateTaskStatus(movedTask._id, TaskStatus.inprogress);
         break;
-      case "completed":
+      case TaskStatus.completed:
         setCompletedTaskItems([...completedTaskItems, movedTask]);
+        await updateTaskStatus(movedTask._id, TaskStatus.completed);
         break;
       default:
         console.log("Not a valid droppable destination");
@@ -67,7 +68,6 @@ export default function Home() {
   };
 
   const onDragEnd = (result: DropResult) => {
-    console.log(result);
     const { destination, source } = result;
 
     if (!destination) {
@@ -81,13 +81,15 @@ export default function Home() {
     );
   };
 
+  const updateTaskStatus = async (taskId: string, status: string) => {
+    const response = await axios.put("/api/tasks/task", { taskId, status });
+  };
+
   useEffect(() => {
     const getTasks = async () => {
       const response = await axios.get("/api/tasks/task");
-      console.log(response.data.data);
       if (response.data?.success) {
         const { todos, inprogress, completed } = response.data?.data;
-        console.log(todos);
         setTodoTaskItems(todos);
         setInProgressTaskItems(inprogress);
         setCompletedTaskItems(completed);
@@ -107,7 +109,7 @@ export default function Home() {
             tasks={todoTaskItems}
           />
           <DroppableColumn
-            droppableId="inProgress"
+            droppableId="inprogress"
             title="In progress"
             description="Keep going!"
             tasks={inProgressTaskItems}
