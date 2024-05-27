@@ -20,7 +20,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LoadingBall from "./Loading";
 import { useToast } from "./use-toast";
 import { useDispatch } from "react-redux";
-import { toggleRefreshTasks } from "@/redux/features/appSlice";
+import { addTaskToTodo } from "@/redux/features/taskSlice";
+import {
+  updateTodoTask,
+  updateInProgressTask,
+  updateCompletedTask,
+} from "@/redux/features/taskSlice";
 
 interface TaskDialogProps {
   dialogTitle: string;
@@ -59,6 +64,9 @@ export function TaskDialog({
         description,
         date,
       });
+      if (response.data.success) {
+        dispatch(addTaskToTodo(response.data.task));
+      }
       setTitle("");
       setDescription("");
       setDate(new Date());
@@ -77,6 +85,17 @@ export function TaskDialog({
         description,
         dueDate: date,
       });
+      console.log(response.data);
+      if (response.data.success) {
+        const { task } = response.data;
+        if (task.status === "todo") {
+          dispatch(updateTodoTask(response.data.task));
+        } else if (task.status === "inprogress") {
+          dispatch(updateInProgressTask(response.data.task));
+        } else if (task.status === "completed") {
+          dispatch(updateCompletedTask(response.data.task));
+        }
+      }
       toast({ title: "Task edited successfuly", description: "Keep going!" });
     } catch (error: any) {
       toast({ title: "Task Edit Failed", description: error.message });
@@ -90,7 +109,6 @@ export function TaskDialog({
     } else {
       onEdit(itemId);
     }
-    dispatch(toggleRefreshTasks());
   };
 
   if (loading) return <LoadingBall />;

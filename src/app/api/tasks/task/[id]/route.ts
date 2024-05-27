@@ -15,15 +15,13 @@ export async function PUT(
   try {
     const { id } = params;
     const { title, description, dueDate } = await request.json();
-    console.log(title, description, dueDate);
-    console.log(id);
     const updatedTask = await Task.findByIdAndUpdate(
       id,
       { title, description, dueDate },
       { new: true }
     );
     return NextResponse.json(
-      { data: updatedTask, success: true },
+      { task: updatedTask, success: true },
       { status: 200 }
     );
   } catch (error: any) {

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     });
     await task.save();
 
-    return NextResponse.json({ data: task, success: true });
+    return NextResponse.json({ task: task, success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message, status: 500 });
   }
