@@ -56,17 +56,17 @@ const taskSlice = createSlice({
     },
     removeTaskFromTodo: (state, action) => {
       state.todos = state.todos.filter(
-        (task: Task) => task._id != action.payload.id
+        (task: Task) => task._id != action.payload._id
       );
     },
     removeTaskFromInProgress: (state, action) => {
-      state.todos = state.inProgress.filter(
-        (task: Task) => task._id != action.payload.id
+      state.inProgress = state.inProgress.filter(
+        (task: Task) => task._id != action.payload._id
       );
     },
     removeTaskFromCompleted: (state, action) => {
-      state.todos = state.completed.filter(
-        (task: Task) => task._id != action.payload.id
+      state.completed = state.completed.filter(
+        (task: Task) => task._id != action.payload._id
       );
     },
   },

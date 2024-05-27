@@ -35,10 +35,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = params;
-    await Task.findByIdAndDelete(id);
-
+    const task = await Task.findByIdAndDelete(id);
     return NextResponse.json({
-      data: { id },
+      task: task,
       success: true,
     });
   } catch (error: any) {

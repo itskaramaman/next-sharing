@@ -4,7 +4,6 @@ import axios from "axios";
 import { Draggable } from "@hello-pangea/dnd";
 import { TaskItem } from "@/app/page";
 import { useDispatch } from "react-redux";
-import { toggleRefreshTasks } from "@/redux/features/appSlice";
 import { CardDescription } from "./card";
 import { TaskDialog } from "./TaskDialog";
 import {
@@ -14,6 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical, FilePenLine, Trash2 } from "lucide-react";
 import { Button } from "./button";
+import {
+  removeTaskFromTodo,
+  removeTaskFromInProgress,
+  removeTaskFromCompleted,
+} from "@/redux/features/taskSlice";
+import { toast } from "./use-toast";
 
 interface DraggableItemProps {
   key: string;
@@ -24,8 +29,25 @@ interface DraggableItemProps {
 const DraggableItem: React.FC<DraggableItemProps> = ({ item, index }) => {
   const dispatch = useDispatch();
   const deleteTask = async (taskId: string) => {
-    const response = await axios.delete(`/api/tasks/task/${taskId}`);
-    dispatch(toggleRefreshTasks());
+    try {
+      const response = await axios.delete(`/api/tasks/task/${taskId}`);
+      if (response.data.success) {
+        const { task } = response.data;
+        if (task.status === "todo") {
+          dispatch(removeTaskFromTodo(task));
+        } else if (task.status === "inprogress") {
+          dispatch(removeTaskFromInProgress(task));
+        } else if (task.status === "completed") {
+          dispatch(removeTaskFromCompleted(task));
+        }
+      }
+      toast({
+        title: "Task deleted successfuly",
+        description: "Lets get it done!",
+      });
+    } catch (error: any) {
+      toast({ title: "Task deletion failed", description: error.message });
+    }
   };
 
   return (
