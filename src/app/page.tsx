@@ -5,6 +5,14 @@ import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import DroppableColumn from "@/components/ui/DroppableColumn";
 import axios from "axios";
 import { TaskStatus } from "@/lib/constants";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import {
+  loadTodoTasks,
+  loadInProgressTasks,
+  loadCompletedTasks,
+} from "@/redux/features/taskSlice";
 
 export interface TaskItem {
   _id: string;
@@ -16,11 +24,16 @@ export interface TaskItem {
 }
 
 export default function Home() {
-  const [todoTaskItems, setTodoTaskItems] = useState<TaskItem[]>([]);
-  const [inProgressTaskItems, setInProgressTaskItems] = useState<TaskItem[]>(
-    []
+  const dispatch = useDispatch();
+  const { refreshTasks } = useSelector((store: RootState) => store.appReducer);
+  const { todos, inProgress, completed } = useSelector(
+    (state: RootState) => state.taskReducer
   );
-  const [completedTaskItems, setCompletedTaskItems] = useState<TaskItem[]>([]);
+  const [todoTaskItems, setTodoTaskItems] = useState<TaskItem[]>(todos);
+  const [inProgressTaskItems, setInProgressTaskItems] =
+    useState<TaskItem[]>(inProgress);
+  const [completedTaskItems, setCompletedTaskItems] =
+    useState<TaskItem[]>(completed);
 
   const updateSourceAndDestination = async (
     sourceDroppable: string,
@@ -94,10 +107,13 @@ export default function Home() {
         setTodoTaskItems(todos);
         setInProgressTaskItems(inprogress);
         setCompletedTaskItems(completed);
+        dispatch(loadTodoTasks(todos));
+        dispatch(loadInProgressTasks(inprogress));
+        dispatch(loadCompletedTasks(completed));
       }
     };
     getTasks();
-  }, []);
+  }, [refreshTasks]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

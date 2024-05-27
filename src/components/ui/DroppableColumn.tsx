@@ -23,7 +23,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
     <div className="md:w-[400px] sm:min-w-[200px] bg-slate-50 p-4 min-h-96">
       <CardTitle>{title}</CardTitle>
       <CardDescription className="my-1">{description}</CardDescription>
-      <hr className="mb-2" />
+      <hr className="mb-2" /> 
       <Droppable droppableId={droppableId}>
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>

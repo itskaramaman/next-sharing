@@ -4,11 +4,37 @@ import Task from "@/models/taskModel";
 
 connectDB();
 
-interface DeleteParams {
+interface TaskParams {
   id: string;
 }
 
-export async function DELETE({ params }: { params: DeleteParams }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: TaskParams }
+) {
+  try {
+    const { id } = params;
+    const { title, description, dueDate } = await request.json();
+    console.log(title, description, dueDate);
+    console.log(id);
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { title, description, dueDate },
+      { new: true }
+    );
+    return NextResponse.json(
+      { data: updatedTask, success: true },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: TaskParams }
+) {
   try {
     const { id } = params;
     await Task.findByIdAndDelete(id);

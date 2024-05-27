@@ -3,14 +3,17 @@
 import axios from "axios";
 import { Draggable } from "@hello-pangea/dnd";
 import { TaskItem } from "@/app/page";
+import { useDispatch } from "react-redux";
+import { toggleRefreshTasks } from "@/redux/features/appSlice";
 import { CardDescription } from "./card";
+import { TaskDialog } from "./TaskDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical, FilePenLine, Trash2 } from "lucide-react";
+import { Button } from "./button";
 
 interface DraggableItemProps {
   key: string;
@@ -19,10 +22,12 @@ interface DraggableItemProps {
 }
 
 const DraggableItem: React.FC<DraggableItemProps> = ({ item, index }) => {
+  const dispatch = useDispatch();
   const deleteTask = async (taskId: string) => {
     const response = await axios.delete(`/api/tasks/task/${taskId}`);
-    console.log(response);
+    dispatch(toggleRefreshTasks());
   };
+
   return (
     <Draggable key={item._id} draggableId={item._id} index={index}>
       {(provided) => (
@@ -43,15 +48,24 @@ const DraggableItem: React.FC<DraggableItemProps> = ({ item, index }) => {
                 <EllipsisVertical width={16} />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem className="flex gap-1 items-center">
-                  <FilePenLine width={16} /> <p>Edit</p>
-                </DropdownMenuItem>
-                <DropdownMenuItem
+                <div className="flex items-center hover:bg-slate-100 px-2">
+                  <FilePenLine width={16}></FilePenLine>
+                  <TaskDialog
+                    dialogTitle="Edit Task"
+                    buttonText="Edit Task"
+                    submitButtonText="Edit"
+                    item={item}
+                  />
+                </div>
+                <div
+                  className="flex items-center hover:bg-slate-100 px-2"
                   onClick={() => deleteTask(item._id)}
-                  className="flex gap-1 items-center"
                 >
-                  <Trash2 width={16} /> <p>Delete</p>
-                </DropdownMenuItem>
+                  <Trash2 width={16} />{" "}
+                  <Button variant="outline" className="border-none">
+                    Delete
+                  </Button>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

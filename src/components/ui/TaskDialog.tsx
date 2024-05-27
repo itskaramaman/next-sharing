@@ -19,12 +19,36 @@ import { DatePicker } from "./datepicker";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LoadingBall from "./Loading";
 import { useToast } from "./use-toast";
+import { useDispatch } from "react-redux";
+import { toggleRefreshTasks } from "@/redux/features/appSlice";
 
-export function TaskDialog() {
+interface TaskDialogProps {
+  dialogTitle: string;
+  buttonText: string;
+  submitButtonText: string;
+  item?: {
+    _id: String;
+    title: string;
+    description: string;
+    dueDate: string;
+  };
+}
+
+export function TaskDialog({
+  dialogTitle,
+  buttonText,
+  submitButtonText,
+  item,
+}: TaskDialogProps) {
   const { toast } = useToast();
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [date, setDate] = useState<Date>(new Date());
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState<string>(item ? item.title : "");
+  const [description, setDescription] = useState<string>(
+    item ? item.description : ""
+  );
+  const [date, setDate] = useState<Date>(
+    item ? new Date(item.dueDate) : new Date()
+  );
   const [loading, setLoading] = useState<boolean>(false);
 
   const onCreate = async () => {
@@ -45,17 +69,41 @@ export function TaskDialog() {
     setLoading(false);
   };
 
+  const onEdit = async (itemId: string) => {
+    try {
+      setLoading(true);
+      const response = await axios.put(`/api/tasks/task/${itemId}`, {
+        title,
+        description,
+        dueDate: date,
+      });
+      toast({ title: "Task edited successfuly", description: "Keep going!" });
+    } catch (error: any) {
+      toast({ title: "Task Edit Failed", description: error.message });
+    }
+    setLoading(false);
+  };
+
+  const handleSubmit = (itemId: string) => {
+    if (submitButtonText === "Create") {
+      onCreate();
+    } else {
+      onEdit(itemId);
+    }
+    dispatch(toggleRefreshTasks());
+  };
+
   if (loading) return <LoadingBall />;
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="border-none">
-          Create Task
+          {buttonText}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[650px]">
         <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>Lets get some work done!.</DialogDescription>
         </DialogHeader>
 
@@ -81,8 +129,12 @@ export function TaskDialog() {
         </div>
 
         <DialogFooter>
-          <Button variant="secondary" type="submit" onClick={onCreate}>
-            Create
+          <Button
+            variant="secondary"
+            type="submit"
+            onClick={() => handleSubmit(item?._id)}
+          >
+            {submitButtonText}
           </Button>
         </DialogFooter>
       </DialogContent>

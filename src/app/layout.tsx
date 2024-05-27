@@ -3,10 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
-import store from "@/store/store";
-import { Provider } from "@reduxjs/toolkit";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/ui/Navbar";
+import ReduxProvider from "@/redux/provider";
 
 export const metadata: Metadata = {
   title: "Next Auth",
@@ -20,13 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Provider store={store}>
-        <body className={inter.className}>
+      <body className={inter.className}>
+        <ReduxProvider>
           <Navbar />
           <main>{children}</main>
           <Toaster />
-        </body>
-      </Provider>
+        </ReduxProvider>
+      </body>
     </html>
   );
 }

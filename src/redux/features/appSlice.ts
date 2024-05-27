@@ -1,18 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
+  refreshTasks: false,
 };
 
 const appSlice = createSlice({
   name: "app",
-  initialState: initialState,
+  initialState,
   reducers: {
-    setLoggedInUser: (state, action) => {
-      state.user = action.payload.user;
+    toggleRefreshTasks: (state) => {
+      state.refreshTasks = !state.refreshTasks;
     },
   },
 });
 
-export const { setLoggedInUser } = appSlice.actions;
+export const { toggleRefreshTasks } = appSlice.actions;
 export default appSlice.reducer;

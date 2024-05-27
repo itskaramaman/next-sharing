@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { logIn } from "@/redux/features/authSlice";
+import { useDispatch } from "react-redux";
 import LoadingBall from "@/components/ui/Loading";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -20,6 +22,7 @@ import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { toast } = useToast();
   const [user, setUser] = useState({ email: "", password: "" });
 
@@ -31,6 +34,7 @@ export default function LoginPage() {
       setLoading(true);
       const response = await axios.post("/api/users/login", user);
       if (response.data.status === 200) {
+        dispatch(logIn({ user: response.data.user.username }));
         toast({ title: "Login Success", description: "Let's Explore" });
         router.push("/");
       } else {
